@@ -1,0 +1,49 @@
+.main-container {
+  margin: 20px;
+
+  .show-table-btn {
+    font-weight: bold;
+    .show-btn {
+      margin: 0 10px 0 10px;
+    }
+  }
+
+  .grid-table {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto;
+    // grid-template-columns: 80px 1.5fr 1fr 1fr 1.2fr 1.2fr 0.8fr;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+
+    /* each row is a nested grid with same columns */
+    .grid-row {
+      display: contents; // allows row to span the parent grid columns
+    }
+
+    .grid-header {
+      background: #f5f7fa;
+      font-weight: 600;
+    }
+
+    .grid-cell {
+      padding: 10px 12px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      align-items: center;
+      min-height: 40px;
+      overflow-wrap: anywhere;
+    }
+
+    .grid-row:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .positive {
+    color: #2e7d32;
+  } // green
+  .negative {
+    color: #c62828;
+  } // red
+}
