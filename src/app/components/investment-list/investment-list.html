@@ -1,1 +1,52 @@
-<p>investment-list works!</p>
+<div class="main-container">
+  @if (!isShowTable()) {
+  <div class="show-table-btn">
+    Do you want to see all investments ?
+    <button type="button" matButton="filled" (click)="displayInvestments()" class="show-btn">
+      Show
+    </button>
+  </div>
+  } @else {
+  <div class="table-container">
+    <h3>Investments List</h3>
+    <div class="grid-table" role="table" aria-label="All investments">
+      <!-- Header row -->
+      <div class="grid-row grid-header" role="row">
+        <div class="grid-cell" role="columnheader">ID</div>
+        <div class="grid-cell" role="columnheader">Name</div>
+        <div class="grid-cell" role="columnheader">Type</div>
+        <div class="grid-cell" role="columnheader">Amount (₹)</div>
+        <div class="grid-cell" role="columnheader">Purchase Date</div>
+        <div class="grid-cell" role="columnheader">Current Value (₹)</div>
+        <div class="grid-cell" role="columnheader">P/L</div>
+      </div>
+
+      <!-- Data rows -->
+      @for (inv of allInvestments(); track $index) {
+      <div class="grid-row" role="row">
+        <div class="grid-cell" role="cell">{{ inv.id }}</div>
+        <div class="grid-cell" role="cell">{{ inv.name }}</div>
+        <div class="grid-cell" role="cell">{{ inv.type }}</div>
+        <div class="grid-cell" role="cell">
+          {{ inv.amount | currency : 'INR' : 'symbol' : '1.0-0' }}
+        </div>
+        <div class="grid-cell" role="cell">{{ inv.purchaseDate | date : 'mediumDate' }}</div>
+        <div class="grid-cell" role="cell">
+          {{ inv.currentValue | currency : 'INR' : 'symbol' : '1.0-0' }}
+        </div>
+        <div
+          class="grid-cell"
+          role="cell"
+          [ngClass]="{
+            positive: inv.currentValue - inv.amount >= 0,
+            negative: inv.currentValue - inv.amount < 0
+          }"
+        >
+          {{ inv.currentValue - inv.amount | currency : 'INR' : 'symbol' : '1.0-0' }}
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+  }
+</div>
