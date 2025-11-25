@@ -1,0 +1,53 @@
+<div class="main-container">
+  <div class="card">
+    <h2>Find Investment by ID</h2>
+    <div class="form-row">
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Investment ID:</mat-label>
+        <input
+          matInput
+          type="number"
+          id="investmentId"
+          [value]="id()"
+          (input)="onIdInput($event)"
+          placeholder="Enter Investment ID"
+        />
+      </mat-form-field>
+      <!-- <label for="investmentId">Investment ID:</label>
+      <input
+        type="number"
+        id="investmentId"
+        [value]="id()"
+        (input)="onIdInput($event)"
+        placeholder="Enter Investment ID"
+      /> -->
+      <button
+        (click)="findInvestment()"
+        [disabled]="id() === null"
+        type="button"
+        matButton="filled"
+        class="find-btn"
+      >
+        Find Investment
+      </button>
+    </div>
+  </div>
+  @if (loading()) {
+  <div class="info">Loading...</div>
+  } @if (error()) {
+  <div class="error">{{ error() }}</div>
+  } @if (investment()) {
+  <div class="result">
+    <h3>{{ investment()!.name }}</h3>
+    <ul>
+      @for (field of fields(); track field.label) {
+      <li>
+        <strong class="label">{{ field.label }}:</strong>{{ field.value }}
+      </li>
+      }
+    </ul>
+  </div>
+  } @else {
+  <div class="muted">Enter an ID to view the investment</div>
+  }
+</div>
