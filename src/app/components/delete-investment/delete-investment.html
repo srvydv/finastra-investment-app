@@ -1,6 +1,6 @@
 <div class="main-container">
   <div class="card">
-    <h2>Find Investment by ID</h2>
+    <h3>Find And Delete investment</h3>
     <div class="form-row row">
       <div class="col-md-3">
         <mat-form-field class="example-full-width" appearance="outline">
@@ -14,16 +14,8 @@
             placeholder="Enter Investment ID"
           />
         </mat-form-field>
-        <!-- <label for="investmentId">Investment ID:</label>
-        <input
-          type="number"
-          id="investmentId"
-          [value]="id()"
-          (input)="onIdInput($event)"
-          placeholder="Enter Investment ID"
-        /> -->
       </div>
-      <div class="col-md-3">
+      <div class="col-md-2">
         <button
           (click)="findInvestment()"
           [disabled]="id() === null"
@@ -42,7 +34,12 @@
   <div class="error">{{ error() }}</div>
   } @if (investment()) {
   <div class="result">
-    <h3>{{ investment()!.name }}</h3>
+    <h3>
+      {{ investment()!.name }}
+      <button type="button" matButton="filled" (click)="deleteInvestment()">
+        Delete Investment
+      </button>
+    </h3>
     <ul>
       @for (field of fields(); track field.label) {
       <li>

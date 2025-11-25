@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { InvestmentService } from '../../services/investment-service';
-import { Investment } from '../../models/investment.model';
+import { InvestmentService } from '../../common/services/investment-service';
+import { Investment } from '../../common/models/investment.model';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 

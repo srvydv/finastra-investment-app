@@ -1,0 +1,23 @@
+.main-container {
+  margin: 20px;
+
+  .card,
+  .info,
+  .error,
+  .result,
+  .muted {
+    margin: 10px;
+  }
+
+  .error {
+    color: red;
+  }
+
+  .find-btn {
+    margin-left: 10px;
+  }
+
+  .label {
+    margin-right: 5px;
+  }
+}
