@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class CommonFunctions {
-  formatDateToYMD(isoString: string): string {
+  formatDateToYMD(isoString: any): string {
     // Parse the ISO string into a Date object
     const date = new Date(isoString);
 
