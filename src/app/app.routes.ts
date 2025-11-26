@@ -21,4 +21,9 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./components/delete-investment/delete-investment').then((m) => m.DeleteInvestment),
   },
+  {
+    path: 'update-investment',
+    loadComponent: () =>
+      import('./components/update-investment/update-investment').then((c) => c.UpdateInvestment),
+  },
 ];

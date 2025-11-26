@@ -1,28 +1,38 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { SharedModule } from '../../common/module/shared/shared-module';
 import { finalize, catchError, of } from 'rxjs';
 import { Investment } from '../../common/models/investment.model';
-import { InvestmentService } from '../../common/services/investment-service';
-import { FormsModule } from '@angular/forms';
 import { ApiErrorHandler } from '../../common/services/api-error-handler';
-import { Snackbar } from '../../common/services/snackbar';
+import { InvestmentService } from '../../common/services/investment-service';
+import { SharedModule } from '../../common/module/shared/shared-module';
+import { FormsModule } from '@angular/forms';
+import { CommonFunctions } from '../../common/services/common-functions';
 
 @Component({
-  selector: 'app-delete-investment',
+  selector: 'app-update-investment',
   imports: [SharedModule, FormsModule],
-  templateUrl: './delete-investment.html',
-  styleUrl: './delete-investment.scss',
+  templateUrl: './update-investment.html',
+  styleUrl: './update-investment.scss',
 })
-export class DeleteInvestment {
+export class UpdateInvestment {
   private svc = inject(InvestmentService);
   private apiErrorHandler = inject(ApiErrorHandler);
-  private snackbar = inject(Snackbar);
+  private commonFunctions = inject(CommonFunctions);
 
   id = signal<number | null>(null);
   loading = signal<boolean>(false);
   error = signal('');
-
   investment = signal<Investment | null>(null);
+  isShowEditInvestmentForm = signal<boolean>(false);
+  investmentObj: any = {
+    id: '',
+    name: '',
+    type: '',
+    amount: '',
+    purchaseDate: new Date(),
+    currentValue: '',
+  };
+
+  typeList = ['Equity', 'Mutual Fund', 'Dept'];
 
   fields = computed(() => {
     const inv = this.investment();
@@ -70,16 +80,30 @@ export class DeleteInvestment {
       .subscribe((inv) => this.investment.set(inv));
   }
 
-  deleteInvestment() {
-    this.svc.deleteInvestment(this.id()!).subscribe(
-      (data) => {
-        this.snackbar.success('Investment deleted successfully');
-        this.id.set(null);
-        this.investment.set(null);
-      },
-      (err) => {
-        this.apiErrorHandler.handleApiError(err);
-      }
+  onEditInvestment(value: Investment | null) {
+    this.isShowEditInvestmentForm.set(true);
+    this.investmentObj = {
+      id: value?.id,
+      name: value?.name,
+      type: value?.type,
+      amount: value?.amount,
+      purchaseDate: this.commonFunctions.isoToNativeDate(value?.purchaseDate),
+      currentValue: value?.currentValue,
+    };
+  }
+
+  onEdit() {
+    const payload = {
+      name: this.investmentObj?.name,
+      type: this.investmentObj?.type,
+      amount: this.investmentObj?.amount,
+      purchaseDate: this.commonFunctions.formatDateToYMD(this.investmentObj?.purchaseDate),
+      currentValue: this.investmentObj?.currentValue,
+    };
+
+    this.svc.editInvestment(this.investmentObj?.id, payload).subscribe(
+      (data) => {},
+      (err) => {}
     );
   }
 }

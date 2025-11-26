@@ -33,4 +33,8 @@ export class InvestmentService {
   deleteInvestment(id: number): Observable<void> {
     return this.http.delete<void>(`${this.appUrl}/${id}`);
   }
+
+  editInvestment(id: string, payload: any): Observable<Investment> {
+    return this.http.put<Investment>(`${this.appUrl}/${id}`, payload);
+  }
 }

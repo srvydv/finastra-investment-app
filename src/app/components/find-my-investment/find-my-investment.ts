@@ -5,6 +5,7 @@ import { catchError, debounceTime, distinctUntilChanged, finalize, of, switchMap
 import { Investment } from '../../common/models/investment.model';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from '../../common/module/shared/shared-module';
+import { ApiErrorHandler } from '../../common/services/api-error-handler';
 
 @Component({
   selector: 'app-find-my-investment',
@@ -14,6 +15,7 @@ import { SharedModule } from '../../common/module/shared/shared-module';
 })
 export class FindMyInvestment {
   private svc = inject(InvestmentService);
+  private apiErrorHandler = inject(ApiErrorHandler);
 
   id = signal<number | null>(null);
   loading = signal<boolean>(false);
@@ -33,7 +35,7 @@ export class FindMyInvestment {
   //       return this.svc.getInvestment(id).pipe(
   //         finalize(() => this.loading.set(false)),
   //         catchError((err) => {
-  //           console.log('Error fetching investment:', err);
+  //           this.apiErrorHandler.handleApiError(err)
   //           this.error.set('Unable to find investment with the provided ID.');
   //           return of(null);
   //         })
@@ -83,7 +85,7 @@ export class FindMyInvestment {
       .pipe(
         finalize(() => this.loading.set(false)),
         catchError((err) => {
-          console.log('Error fetching investment:', err);
+          this.apiErrorHandler.handleApiError(err);
           this.error.set('Unable to find investment with the provided ID.');
           return of(null);
         })

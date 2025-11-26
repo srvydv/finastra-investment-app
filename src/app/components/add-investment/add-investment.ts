@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { SharedModule } from '../../common/module/shared/shared-module';
 import { FormsModule } from '@angular/forms';
-import { CommonService } from '../../common/services/common-service';
 import { Spinner } from '../../common/services/spinner';
 import { InvestmentService } from '../../common/services/investment-service';
+import { Snackbar } from '../../common/services/snackbar';
+import { CommonFunctions } from '../../common/services/common-functions';
+import { ApiErrorHandler } from '../../common/services/api-error-handler';
 
 @Component({
   selector: 'app-add-investment',
@@ -23,36 +25,37 @@ export class AddInvestment {
   typeList = ['Equity', 'Mutual Fund', 'Dept'];
 
   constructor(
-    private commonService: CommonService,
+    private commonFunctions: CommonFunctions,
     private spinner: Spinner,
-    private investmentService: InvestmentService
+    private investmentService: InvestmentService,
+    private snackbar: Snackbar,
+    private apiErrorHandler: ApiErrorHandler
   ) {}
 
   onSave() {
     const formValue = this.investmentObj;
-    console.log('formValue', formValue);
 
     const payload = {
       name: formValue.name,
       type: formValue.type,
       amount: Number(formValue.amount),
-      purchaseDate: this.commonService.formatDateToYMD(formValue.purchaseDate),
+      purchaseDate: this.commonFunctions.formatDateToYMD(formValue.purchaseDate),
       currentValue: Number(formValue.currentValue),
     };
 
-    this.addInvestment(payload);
+    this.onAddInvestment(payload);
   }
 
-  addInvestment(payload: any) {
-    this.spinner.show();
+  onAddInvestment(payload: any) {
+    // this.spinner.show();
     this.investmentService.addFreshInvestment(payload).subscribe(
       (data) => {
-        console.log('Investment added successfully', data);
-        this.spinner.hide();
+        // this.spinner.hide();
+        this.snackbar.success('Investment added successfully');
       },
       (err) => {
-        console.log('error', err);
-        this.spinner.hide();
+        // this.spinner.hide();
+        this.apiErrorHandler.handleApiError(err);
       }
     );
   }
