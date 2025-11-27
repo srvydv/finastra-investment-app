@@ -1,0 +1,95 @@
+<h3>Add investment</h3>
+<div class="main-container">
+  <form novalidate [formGroup]="form" (ngSubmit)="onSubmit()" noValidate>
+    <div class="row mt-3">
+      <div class="col-md-4 mb-3">
+        <mat-form-field appearance="outline">
+          <mat-label>Id</mat-label>
+          <input type="number" matInput formControlName="id" required autocomplete="off" />
+          @if ( f.id.hasError('required') && f.id.touched) {
+          <mat-error>Id is required</mat-error>
+          } @if (f.id.hasError('min') && f.id.touched) {
+          <mat-error> Id must be greater then 0 </mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <div class="col-md-4 mb-3">
+        <mat-form-field appearance="outline">
+          <mat-label>Name</mat-label>
+          <input type="text" matInput formControlName="name" required autocomplete="off" />
+          @if ( f.name.hasError('required') && f.name.touched) {
+          <mat-error>Name is required</mat-error>
+          } @if (f.name.hasError('minlength') && f.name.touched) {
+          <mat-error>Name must be at least 3 characters long</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <div class="col-md-4 mb-3">
+        <mat-form-field appearance="outline">
+          <mat-label>Type</mat-label>
+          <mat-select formControlName="type" required>
+            @for (type of typeList; track type) {
+            <mat-option [value]="type">{{ type }}</mat-option>
+            }
+          </mat-select>
+          @if (f.type.errors?.['required'] && f.type.touched) {
+          <mat-error>Type is required</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <div class="col-md-4 mb-3">
+        <mat-form-field appearance="outline">
+          <mat-label>Amount</mat-label>
+          <input type="number" matInput formControlName="amount" required />
+          @if (f.amount.errors?.['required'] && f.amount.touched) {
+          <mat-error>Amount is required</mat-error>
+          } @if (f.amount.errors?.['min'] && f.amount.touched) {
+          <mat-error>Amount should be greater then 1</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4 mb-3">
+        <mat-form-field>
+          <mat-label>Purchase Date</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="purchaseDate" required />
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          @if (f.purchaseDate.errors?.['required'] && f.purchaseDate.touched) {
+          <mat-error>Purchase Date is required</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4 mb-3">
+        <mat-form-field appearance="outline">
+          <mat-label>Current Value</mat-label>
+          <input
+            type="number"
+            matInput
+            formControlName="currentValue"
+            required
+            autocomplete="off"
+          />
+          @if (f.currentValue.errors?.['required'] && f.currentValue.touched) {
+          <mat-error>Current Value is required</mat-error>
+          } @if (f.currentValue.errors?.['min'] && f.currentValue.touched) {
+          <mat-error>Current Value should be greater then 0</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="text-center mt-3">
+      <button matButton="filled" type="submit" class="">
+        {{ isSubmitting() ? 'Saving...' : 'Add Investment' }}
+      </button>
+    </div>
+
+    @if (successMessage()) {
+    <p class="sucsess">{{ successMessage() }}</p>
+    } @if (serverError()) {
+    <p class="error">{{ serverError() }}</p>
+    }
+  </form>
+</div>

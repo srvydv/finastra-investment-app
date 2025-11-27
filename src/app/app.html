@@ -1,3 +1,47 @@
-<!-- <app-investment-list /> -->
-<app-find-my-investment />
-<router-outlet />
+<div class="example-container" [class.example-is-mobile]="isMobile()">
+  <mat-toolbar class="example-toolbar">
+    <button matIconButton (click)="snav.toggle()">
+      <mat-icon class="menu-icons-color">menu</mat-icon>
+    </button>
+    <h1 class="example-app-name">Finastra Investment App</h1>
+    <span class="example-spacer"></span>
+    <button
+      matIconButton
+      class="example-icon favorite-icon"
+      aria-label="Example icon-button with heart icon"
+    >
+      <mat-icon class="menu-icons-color">favorite</mat-icon>
+    </button>
+    <button matIconButton class="example-icon" aria-label="Example icon-button with share icon">
+      <mat-icon class="menu-icons-color">share</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <mat-sidenav-container
+    class="example-sidenav-container"
+    [style.marginTop.px]="isMobile() ? 56 : 0"
+  >
+    <mat-sidenav
+      #snav
+      [mode]="isMobile() ? 'over' : 'side'"
+      [fixedInViewport]="isMobile()"
+      fixedTopGap="56"
+    >
+      <mat-nav-list>
+        @for (item of navigationLink; track $index) {
+        <a mat-list-item [routerLink]="item.path" routerLinkActive="active-link" class="hover">
+          <div class="side-nav-items-container">
+            <mat-icon mat-list-icon>{{ item.icon }}</mat-icon>
+            <div class="side-nav-link-name">{{ item.name }}</div>
+          </div>
+        </a>
+        }
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="side-nav-content">
+      <router-outlet />
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
+<app-global-spinner></app-global-spinner>

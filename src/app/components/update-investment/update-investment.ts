@@ -1,51 +1,38 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { InvestmentService } from '../../common/services/investment-service';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { catchError, debounceTime, distinctUntilChanged, finalize, of, switchMap } from 'rxjs';
+import { finalize, catchError, of } from 'rxjs';
 import { Investment } from '../../common/models/investment.model';
-import { FormsModule } from '@angular/forms';
-import { SharedModule } from '../../common/module/shared/shared-module';
 import { ApiErrorHandler } from '../../common/services/api-error-handler';
+import { InvestmentService } from '../../common/services/investment-service';
+import { SharedModule } from '../../common/module/shared/shared-module';
+import { FormsModule } from '@angular/forms';
+import { CommonFunctions } from '../../common/services/common-functions';
 
 @Component({
-  selector: 'app-find-my-investment',
-  imports: [FormsModule, SharedModule],
-  templateUrl: './find-my-investment.html',
-  styleUrl: './find-my-investment.scss',
+  selector: 'app-update-investment',
+  imports: [SharedModule, FormsModule],
+  templateUrl: './update-investment.html',
+  styleUrl: './update-investment.scss',
 })
-export class FindMyInvestment {
+export class UpdateInvestment {
   private svc = inject(InvestmentService);
   private apiErrorHandler = inject(ApiErrorHandler);
+  private commonFunctions = inject(CommonFunctions);
 
   id = signal<number | null>(null);
   loading = signal<boolean>(false);
   error = signal('');
-
-  // private id$ = toObservable(this.id).pipe(debounceTime(150), distinctUntilChanged());
-
-  // investment = toSignal<Investment | null>(
-  //   this.id$.pipe(
-  //     switchMap((id) => {
-  //       this.error.set('');
-  //       if (id === null || Number.isNaN(id)) {
-  //         this.loading.set(false);
-  //         return of(null);
-  //       }
-  //       this.loading.set(true);
-  //       return this.svc.getInvestment(id).pipe(
-  //         finalize(() => this.loading.set(false)),
-  //         catchError((err) => {
-  //           this.apiErrorHandler.handleApiError(err)
-  //           this.error.set('Unable to find investment with the provided ID.');
-  //           return of(null);
-  //         })
-  //       );
-  //     })
-  //   ),
-  //   { initialValue: null }
-  // );
-
   investment = signal<Investment | null>(null);
+  isShowEditInvestmentForm = signal<boolean>(false);
+  investmentObj: any = {
+    id: '',
+    name: '',
+    type: '',
+    amount: '',
+    purchaseDate: new Date(),
+    currentValue: '',
+  };
+
+  typeList = ['Equity', 'Mutual Fund', 'Dept'];
 
   fields = computed(() => {
     const inv = this.investment();
@@ -91,5 +78,32 @@ export class FindMyInvestment {
         })
       )
       .subscribe((inv) => this.investment.set(inv));
+  }
+
+  onEditInvestment(value: Investment | null) {
+    this.isShowEditInvestmentForm.set(true);
+    this.investmentObj = {
+      id: value?.id,
+      name: value?.name,
+      type: value?.type,
+      amount: value?.amount,
+      purchaseDate: this.commonFunctions.isoToNativeDate(value?.purchaseDate),
+      currentValue: value?.currentValue,
+    };
+  }
+
+  onEdit() {
+    const payload = {
+      name: this.investmentObj?.name,
+      type: this.investmentObj?.type,
+      amount: this.investmentObj?.amount,
+      purchaseDate: this.commonFunctions.formatDateToYMD(this.investmentObj?.purchaseDate),
+      currentValue: this.investmentObj?.currentValue,
+    };
+
+    this.svc.editInvestment(this.investmentObj?.id, payload).subscribe(
+      (data) => {},
+      (err) => {}
+    );
   }
 }

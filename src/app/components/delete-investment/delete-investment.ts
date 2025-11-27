@@ -1,49 +1,26 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { InvestmentService } from '../../common/services/investment-service';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { catchError, debounceTime, distinctUntilChanged, finalize, of, switchMap } from 'rxjs';
-import { Investment } from '../../common/models/investment.model';
-import { FormsModule } from '@angular/forms';
 import { SharedModule } from '../../common/module/shared/shared-module';
+import { finalize, catchError, of } from 'rxjs';
+import { Investment } from '../../common/models/investment.model';
+import { InvestmentService } from '../../common/services/investment-service';
+import { FormsModule } from '@angular/forms';
 import { ApiErrorHandler } from '../../common/services/api-error-handler';
+import { Snackbar } from '../../common/services/snackbar';
 
 @Component({
-  selector: 'app-find-my-investment',
-  imports: [FormsModule, SharedModule],
-  templateUrl: './find-my-investment.html',
-  styleUrl: './find-my-investment.scss',
+  selector: 'app-delete-investment',
+  imports: [SharedModule, FormsModule],
+  templateUrl: './delete-investment.html',
+  styleUrl: './delete-investment.scss',
 })
-export class FindMyInvestment {
+export class DeleteInvestment {
   private svc = inject(InvestmentService);
   private apiErrorHandler = inject(ApiErrorHandler);
+  private snackbar = inject(Snackbar);
 
   id = signal<number | null>(null);
   loading = signal<boolean>(false);
   error = signal('');
-
-  // private id$ = toObservable(this.id).pipe(debounceTime(150), distinctUntilChanged());
-
-  // investment = toSignal<Investment | null>(
-  //   this.id$.pipe(
-  //     switchMap((id) => {
-  //       this.error.set('');
-  //       if (id === null || Number.isNaN(id)) {
-  //         this.loading.set(false);
-  //         return of(null);
-  //       }
-  //       this.loading.set(true);
-  //       return this.svc.getInvestment(id).pipe(
-  //         finalize(() => this.loading.set(false)),
-  //         catchError((err) => {
-  //           this.apiErrorHandler.handleApiError(err)
-  //           this.error.set('Unable to find investment with the provided ID.');
-  //           return of(null);
-  //         })
-  //       );
-  //     })
-  //   ),
-  //   { initialValue: null }
-  // );
 
   investment = signal<Investment | null>(null);
 
@@ -91,5 +68,18 @@ export class FindMyInvestment {
         })
       )
       .subscribe((inv) => this.investment.set(inv));
+  }
+
+  deleteInvestment() {
+    this.svc.deleteInvestment(this.id()!).subscribe(
+      (data) => {
+        this.snackbar.success('Investment deleted successfully');
+        this.id.set(null);
+        this.investment.set(null);
+      },
+      (err) => {
+        this.apiErrorHandler.handleApiError(err);
+      }
+    );
   }
 }
