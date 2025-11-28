@@ -37,5 +37,6 @@ export class App {
     { path: 'add-investment', name: 'Add Investment', icon: 'add_circle' },
     { path: 'delete-investment', name: 'Delete Investment', icon: 'remove_circle' },
     { path: 'update-investment', name: 'Edit Investment', icon: 'edit' },
+    { path: 'investments', name: 'Investments Overview', icon: 'insights' },
   ];
 }

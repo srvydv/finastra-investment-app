@@ -1,0 +1,56 @@
+<div class="investment-app">
+  <h1 class="page-title">Investments</h1>
+  <div class="summary">
+    <div class="summary-item">
+      <div class="lable">Total Invested</div>
+      <div class="value">₹{{ store.totalInvested() | number }}</div>
+    </div>
+    <div class="summary-item">
+      <div class="lable">Current Value</div>
+      <div class="value">₹{{ store.totalCurrent() | number }}</div>
+    </div>
+    <div class="summary-item">
+      <div class="lable">Gain/Loss</div>
+      <div
+        class="value"
+        [class.positive]="store.totalGain() >= 0"
+        [class.negative]="store.totalGain() < 0"
+      >
+        ₹{{ store.totalGain() | number }}
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    @if(store.isLoading()) {
+    <div class="banner banner-loading">Loading Investments</div>
+    } @else if (store.error()) {
+    <div class="banner banner-error">Error: {{ store.error() }}</div>
+    } @else {
+    <div class="list">
+      @for(inv of store.investments(); track $index) {
+      <div class="card">
+        <div class="card-header">
+          <div class="name">{{ inv.name }}</div>
+          <div class="badge">{{ inv.type }}</div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <div class="lable">Invested</div>
+              <div class="amount">₹{{ inv.amount | number }}</div>
+            </div>
+            <div class="col">
+              <div class="lable">Current</div>
+              <div class="amount">₹{{ inv.currentValue | number }}</div>
+            </div>
+          </div>
+          <div class="meta">Purchased on: {{ inv.purchaseDate | date : 'mediumDate' }}</div>
+        </div>
+      </div>
+      } @empty {
+      <div class="empty">No investments found.</div>
+      }
+    </div>
+    }
+  </div>
+</div>

@@ -71,6 +71,7 @@ export class AddInvestment {
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.snackbar.error('Please fill the all the mandatory fields first.');
       return;
     }
 

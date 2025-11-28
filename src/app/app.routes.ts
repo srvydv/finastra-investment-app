@@ -26,4 +26,8 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./components/update-investment/update-investment').then((c) => c.UpdateInvestment),
   },
+  {
+    path: 'investments',
+    loadComponent: () => import('./components/investments/investments').then((m) => m.Investments),
+  },
 ];
