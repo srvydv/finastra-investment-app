@@ -5,16 +5,15 @@
     </button>
     <h1 class="example-app-name">Finastra Investment App</h1>
     <span class="example-spacer"></span>
-    <button
-      matIconButton
-      class="example-icon favorite-icon"
-      aria-label="Example icon-button with heart icon"
-    >
-      <mat-icon class="menu-icons-color">favorite</mat-icon>
+    <button matIconButton class="example-icon" [matMenuTriggerFor]="logoutMenu">
+      <mat-icon class="menu-icons-color">logout</mat-icon>
     </button>
-    <button matIconButton class="example-icon" aria-label="Example icon-button with share icon">
-      <mat-icon class="menu-icons-color">share</mat-icon>
-    </button>
+    <mat-menu #logoutMenu="matMenu">
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-menu>
   </mat-toolbar>
 
   <mat-sidenav-container

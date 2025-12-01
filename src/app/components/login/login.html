@@ -1,0 +1,43 @@
+<div class="login-container">
+  <div class="card">
+    <h4 class="text-center">Login Form</h4>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="col-md-12 mt-3">
+          <mat-form-field appearance="outline">
+            <mat-label>User Name</mat-label>
+            <input type="text" matInput formControlName="userName" required autocomplete="off" />
+            @if (loginForm.controls['userName'].hasError('required') &&
+            loginForm.controls['userName'].touched) {
+            <mat-error>User Name is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-md-12 mt-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input
+              type="password"
+              matInput
+              formControlName="password"
+              required
+              autocomplete="off"
+            />
+            @if (loginForm.controls['password'].hasError('required') &&
+            loginForm.controls['password'].touched) {
+            <mat-error>Password is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        @if (errorMessage()) {
+        <div class="col-md-12 mt-3 error-message">
+          {{ errorMessage() }}
+        </div>
+        }
+        <div class="col-md-12 text-center mt-3">
+          <button matButton="filled" type="submit">Login</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

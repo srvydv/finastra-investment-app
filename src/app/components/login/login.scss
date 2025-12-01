@@ -1,0 +1,12 @@
+.login-container {
+  width: 100%;
+  .card {
+    width: 500px;
+    margin: auto;
+    padding: 20px;
+
+    .error-message {
+      color: red;
+    }
+  }
+}

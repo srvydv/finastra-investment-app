@@ -1,8 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { GlobalSpinner } from './common/components/global-spinner/global-spinner';
 import { SharedModule } from './common/module/shared/shared-module';
+import { Snackbar } from './common/services/snackbar';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,8 @@ import { SharedModule } from './common/module/shared/shared-module';
 })
 export class App {
   protected readonly title = signal('Angular20-Prac');
+  private snackbar = inject(Snackbar);
+  private router = inject(Router);
 
   protected readonly isMobile = signal(true);
 
@@ -38,5 +41,12 @@ export class App {
     { path: 'delete-investment', name: 'Delete Investment', icon: 'remove_circle' },
     { path: 'update-investment', name: 'Edit Investment', icon: 'edit' },
     { path: 'investments', name: 'Investments Overview', icon: 'insights' },
+    { path: 'login', name: 'Login', icon: 'login' },
   ];
+
+  logout() {
+    localStorage.removeItem('isLoggedIn');
+    this.router.navigate(['/login']);
+    this.snackbar.success('Logged out successfully.');
+  }
 }
